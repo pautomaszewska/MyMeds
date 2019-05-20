@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <div class="text-center">
+    <h5>Add medicine</h5>
+    <form action="{%  url 'add-medicine' %}" method="post" class="form">
+    {% csrf_token %}
+    {{ form | crispy }}
+    <input type="submit" value="Add">
+
+    </form>
+    </div>
+
+{% endblock %}
