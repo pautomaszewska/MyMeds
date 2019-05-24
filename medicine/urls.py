@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.urls import path
 from django.contrib.auth import views as auth_views
 
-from medications.views import MedicineList, AddMedicine
+from medications.views import MedicineList, AddMedicine, DeleteMedicine, UpdateMedicine
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -25,5 +25,7 @@ urlpatterns = [
     path('logout/', auth_views.LogoutView.as_view(template_name='logout.html'), name='logout'),
     path('medicine/', MedicineList.as_view(), name='medicine'),
     path('add-medicine/', AddMedicine.as_view(), name='add-medicine'),
+    path('delete-medicine/<id>', DeleteMedicine.as_view(), name='delete-medicine'),
+    path('update-medicine/<id>', UpdateMedicine.as_view(), name='update-medicine'),
 
 ]

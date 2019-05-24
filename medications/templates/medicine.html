@@ -11,6 +11,8 @@
         <th scope="col">Amount</th>
         <th scope="col">Dose</th>
         <th scope="col">Expiration date</th>
+        <th scope="col">Edit</th>
+        <th scope="col">Delete</th>
     </thead>
 
 
@@ -19,9 +21,10 @@
         <tr><td>{{ med.name }}</td>
             <td>{{ med.active_ingredient }}</td>
             <td>{{ med.amount}}</td>
-            <td>{{ med.amount}}</td>
             <td>{{ med.dose}}</td>
             <td>{{ med.expiration_date | date:"d-m-Y" }}</td>
+            <td><a href="{% url 'update-medicine' med.id %}">Edit</a></td>
+            <td><a href="{% url 'delete-medicine' med.id %}">Delete</a></td>
 
     {% endfor %}
     </tbody>
