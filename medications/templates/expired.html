@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load octicons %}
+
+{% block content %}
+     <div>
+  <form class="form-inline" action="{%  url 'expired' %}" method="post">
+      {% csrf_token %}
+      <input class="form-control mr-sm-2" type="text" placeholder="Name" aria-label="Search" name="name">
+      <input class="form-control mr-sm-2" type="text" placeholder="Active ingredient" aria-label="Search" name="ingredient">
+    <button class="btn btn-primary btn-outline-dark" type="submit">Search</button>
+  </form>
+    </div>
+
+
+    <h5 class="text-center">Expired meds</h5>
+    <table class="table table-striped">
+    <thead>
+    <tr><th scope="col">Name</th>
+        <th scope="col">Active ingredient</th>
+        <th scope="col">Amount</th>
+        <th scope="col">Dose</th>
+        <th scope="col">Expiration date</th>
+        <th scope="col">Edit</th>
+        <th scope="col">Delete</th>
+    </thead>
+
+
+    <tbody>
+        {% for med in expired %}
+        <tr><td>{{ med.name }}</td>
+            <td>{{ med.active_ingredient }}</td>
+            <td>{{ med.amount}}</td>
+            <td>{{ med.dose}}</td>
+            <td>{{ med.expiration_date | date:"d-m-Y" }}</td>
+            <td><a href="{% url 'update-medicine' med.id %}" role="button">{% octicon tools %}</a></td>
+            <td><a href="{% url 'delete-medicine' med.id %}">{% octicon x %}</a></td>
+
+    {% endfor %}
+    </tbody>
+    </table>
+
+
+{% endblock %}

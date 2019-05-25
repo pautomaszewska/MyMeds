@@ -1,18 +1,24 @@
 from django.shortcuts import render, redirect
 from django.views import View
+from django.contrib.auth.mixins import LoginRequiredMixin
+
+from datetime import date
+
 from django.http import HttpResponse, HttpResponseRedirect
 
 from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
 from django.contrib.auth.models import User
 
 from .models import Medicine
-from .forms import MedicineForm
+from .forms import MedicineForm, UserRegisterForm
 
 
-class MedicineList(View):
+class MedicineList(LoginRequiredMixin, View):
     def get(self, request):
-        meds = Medicine.objects.filter(user=request.user).order_by('name')
+        today = date.today()
+        meds = Medicine.objects.filter(user=request.user).filter(expiration_date__gte=today).order_by('name')
         return render(request, 'medicine.html', {'meds': meds})
+
     def post(self, request):
         name = request.POST.get('name')
         ingredient = request.POST.get('ingredient')
@@ -25,10 +31,7 @@ class MedicineList(View):
         return render(request, 'medicine.html', {'search_name': search_name, 'search_ingredient': search_ingredient})
 
 
-
-
-
-class AddMedicine(View):
+class AddMedicine(LoginRequiredMixin, View):
     def get(self, request):
         form = MedicineForm()
         return render(request, 'add_medicine.html', {'form': form})
@@ -48,7 +51,7 @@ class AddMedicine(View):
             return render(request, 'add_medicine.html', {'form': form})
 
 
-class DeleteMedicine(View):
+class DeleteMedicine(LoginRequiredMixin, View):
     def get(self, request, id):
         med = Medicine.objects.get(id=id)
         med.delete()
@@ -67,6 +70,30 @@ class UpdateMedicine(View):
         if form.is_valid():
             form.save()
             return redirect('medicine')
+
+
+class ExpiredMedicine(LoginRequiredMixin, View):
+    def get(self, request):
+        today = date.today()
+        expired = Medicine.objects.filter(expiration_date__lt=today)
+        return render(request, 'expired.html', {'expired': expired})
+
+
+class RegisterView(View):
+    def get(self, request):
+        form = UserRegisterForm()
+        return render(request, 'register.html', {'form': form})
+
+    def post(self, request):
+        form = UserRegisterForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            password = form.cleaned_data['password1']
+            user.set_password(password)
+            user.save()
+            return redirect('login')
+
+
 
 
 
