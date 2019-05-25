@@ -13,6 +13,19 @@ class MedicineList(View):
     def get(self, request):
         meds = Medicine.objects.filter(user=request.user).order_by('name')
         return render(request, 'medicine.html', {'meds': meds})
+    def post(self, request):
+        name = request.POST.get('name')
+        ingredient = request.POST.get('ingredient')
+        try:
+            search_name = Medicine.objects.filter(name=name)
+            search_ingredient = Medicine.objects.filter(active_ingredient=ingredient)
+        except ValueError:
+            search_name = None
+            search_ingredient = None
+        return render(request, 'medicine.html', {'search_name': search_name, 'search_ingredient': search_ingredient})
+
+
+
 
 
 class AddMedicine(View):
@@ -52,21 +65,8 @@ class UpdateMedicine(View):
         medicine = Medicine.objects.get(id=id)
         form = MedicineForm(request.POST, instance=medicine)
         if form.is_valid():
-            # medicine = Medicine.objects.get(name=form.cleaned_data.get('name'),
-            #                                    active_ingredient=form.cleaned_data.get('active_ingredient'),
-            #                                    amount=form.cleaned_data.get('amount'),
-            #                                    dose=form.cleaned_data.get('dose'),
-            #                                    expiration_date=form.cleaned_data.get('expiration_date'),
-            #                                    user=request.user)
-            # medicine.name = form.cleaned_data.get('name')
-            # medicine.active_ingredient = form.cleaned_data.get('active_ingredient')
-            # medicine.amount = form.cleaned_data.get('amount')
-            # medicine.dose = form.cleaned_data.get('dose')
-            # medicine.expiration_date = form.cleaned_data.get('expiration_date')
-            # medicine.save()
             form.save()
             return redirect('medicine')
-
 
 
 
