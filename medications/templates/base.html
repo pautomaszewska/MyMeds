@@ -19,9 +19,44 @@
 
 <header class="navbar navbar-expand-lg navbar-light bg-light mb-4" id="main-header">
 
-{#  <a class="navbar-brand app-name" href="{% url 'index' %}">MyMeds</a>#}
+  <a class="navbar-brand app-name" href="{% url 'medicine' %}">MyMeds</a>
 
 
+{#  <div class="collapse navbar-collapse" id="navbarNavDropdown">#}
+
+
+
+
+{% if user.is_authenticated %}
+    <ul class="navbar-nav ml-auto">
+
+      <li class="btn-group dropleft">
+        <button type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Menu
+        </button>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+            <a class="dropdown-item" href="{% url 'add-medicine' %}">Add medicine</a>
+            <a class="dropdown-item" href="{% url 'medicine' %}">My meds</a>
+            <a class="dropdown-item" href="{% url 'expired' %}">Expired meds</a>
+            <a class="dropdown-item" href="{% url 'logout' %}">Log out</a>
+
+        </div>
+      </li>
+    </ul>
+
+
+    {% else %}
+    <ul class="navbar-nav ml-auto">
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'register' %}">Register</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'login' %}">Login</a>
+      </li>
+    {% endif %}
+    </ul>
+  </div>
+</nav>
 
 </header>
 
