@@ -6,7 +6,7 @@ from datetime import date
 
 from django.http import HttpResponse, HttpResponseRedirect
 
-from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 
 from .models import Medicine
@@ -77,6 +77,18 @@ class ExpiredMedicine(LoginRequiredMixin, View):
         today = date.today()
         expired = Medicine.objects.filter(expiration_date__lt=today)
         return render(request, 'expired.html', {'expired': expired})
+
+    def post(self, request):
+        name = request.POST.get('name')
+        ingredient = request.POST.get('ingredient')
+        today = date.today()
+        try:
+            search_name = Medicine.objects.filter(name=name).filter(expiration_date__lt=today)
+            search_ingredient = Medicine.objects.filter(active_ingredient=ingredient).filter(expiration_date__lt=today)
+        except ValueError:
+            search_name = None
+            search_ingredient = None
+        return render(request, 'expired.html', {'search_name': search_name, 'search_ingredient': search_ingredient})
 
 
 class RegisterView(View):
