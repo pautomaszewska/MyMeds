@@ -1,4 +1,4 @@
-# LunchTime
+# My Meds
 
 ### Info
 Simple Django app created for medicine management.
